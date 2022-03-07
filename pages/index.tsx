@@ -1,14 +1,13 @@
 import { useRouter } from "next/router";
 import { useEffect, useLayoutEffect, useState } from "react";
-import { Button, Container, Input } from "../components";
+import { Button, Container, Input, View, Text, Wrapper } from "../components";
 import { getConfig } from "../services/binance";
 
 const Index = () => {
   const router = useRouter();
 
   const [config, setConfigs] = useState({} as ReturnType<typeof getConfig>);
-  const { apiKey, apiSecret, hasApiKey, hasApiSecret } = config;
-  const hasConfig = hasApiKey && hasApiSecret;
+  const { apiKey, apiSecret, hasConfig } = config;
 
   type X = Partial<Record<"apiKey" | "apiSecret", string>>;
   const setConfig = (newConfig: X) => {
@@ -45,6 +44,19 @@ const Index = () => {
         onChangeText={(apiSecret) => setConfig({ apiSecret })}
       />
       <Button onClick={setNewConfig}>Set Config</Button>
+      <View>
+        <Text>This is an open source project</Text>
+        <Text>
+          This is an open source project, you can check the code bellow
+        </Text>
+        <a
+          target="_blank"
+          rel="noreferrer"
+          href="https://github.com/aprakoso98/binance-next"
+        >
+          https://github.com/aprakoso98/binance-next
+        </a>
+      </View>
     </Container>
   );
 };

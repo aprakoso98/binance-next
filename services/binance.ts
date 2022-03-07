@@ -50,6 +50,9 @@ export const getConfig = () => {
     get hasApiSecret() {
       return this.apiSecret.length > 0;
     },
+    get hasConfig() {
+      return this.hasApiKey && this.hasApiSecret;
+    },
   };
 };
 

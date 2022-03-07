@@ -1,8 +1,9 @@
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 
-import { Container, Text, View, Wrapper } from "../../components";
+import { Button, Container, Text, View, Wrapper } from "../../components";
 import { binance, RetAccountInfo } from "../../services/api";
+import { getConfig } from "../../services/binance";
 
 const App = () => {
   const router = useRouter();
@@ -20,12 +21,21 @@ const App = () => {
     setData(user);
   };
 
-  useEffect(() => {
+  const doLogout = () => {
+    localStorage.removeItem("apiKey");
+    localStorage.removeItem("apiSecret");
+    router.replace("/");
+  };
+
+  useLayoutEffect(() => {
     getInfo();
+    const { hasConfig } = getConfig();
+    if (!hasConfig) router.push("/");
   }, []);
 
   return (
     <Container>
+      <Button onClick={doLogout}>Logout</Button>
       <Wrapper flex>
         <Text>asset</Text>
         <Text>value</Text>

@@ -1,10 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 
 import { ScatterDataPoint } from "chart.js";
 import { useRouter } from "next/router";
 import { generateChartData } from "../../utils/generateChartData";
 import { binance, RetAllOrders } from "../../services/api";
-import { Chart, Container, Input, Text, View, Wrapper } from "../../components";
+import {
+  Button,
+  Chart,
+  Container,
+  Input,
+  Text,
+  View,
+  Wrapper,
+} from "../../components";
+import { getConfig } from "../../services/binance";
 
 const WalletDetail = () => {
   const router = useRouter();
@@ -30,9 +39,15 @@ const WalletDetail = () => {
     if (asset?.length > 0) getDetail();
   }, [stableCoin, asset]);
 
+  useLayoutEffect(() => {
+    const { hasConfig } = getConfig();
+    if (!hasConfig) router.push("/");
+  }, []);
+
   return (
     <Container>
       <Wrapper>
+        <Button onClick={() => router.push("/app")}>Home</Button>
         <Wrapper flex={0.8}>
           <Input
             defaultValue={assett}

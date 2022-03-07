@@ -1,6 +1,7 @@
 export * from "./Chart";
 
 import styled from "styled-components";
+import { COLORS } from "../constans";
 
 import { FlexBox, getFlexBox } from "../types/flexBox.type";
 
@@ -13,7 +14,6 @@ export const View = styled.div<FlexBox>((props) => {
     display: "flex",
     flexDirection: "column",
     cursor: onClick ? "pointer" : undefined,
-    // backgroundColor: 'green',
   };
 });
 
@@ -37,8 +37,10 @@ export const Text = styled.p((props) => {
 
 export const Button = styled.div(() => {
   return {
-    backgroundColor: "green",
+    backgroundColor: COLORS.primary,
     cursor: "pointer",
+    color: COLORS.white,
+    padding: 14,
   };
 });
 
