@@ -45,10 +45,21 @@ const Index = () => {
       />
       <Button onClick={setNewConfig}>Set Config</Button>
       <View>
+        <Text>To get apiKey & apiSecret, you must enable Binance API management and follow the instructions</Text>
+        <a
+          target="_blank"
+          rel="noreferrer"
+          href="https://www.binance.com/en/my/settings/api-management"
+        >
+          https://www.binance.com/en/my/settings/api-management
+        </a>
         <Text>This is an open source project</Text>
         <Text>
-          This is an open source project, you can check the code bellow
+          This project is only bridge between your data and binance API
         </Text>
+          <Text>
+            This is an open source project, you can check the code bellow
+          </Text>
         <a
           target="_blank"
           rel="noreferrer"

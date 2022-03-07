@@ -57,10 +57,10 @@ const WalletDetail = () => {
               if (key === "Enter") setAssetFix(assett);
             }}
           />
-          <Text onClick={() => setAssetFix(assett)}>Search</Text>
+          <Button onClick={() => setAssetFix(assett)}>Search</Button>
         </Wrapper>
-        <Text onClick={() => setAssetFix(assett, "USDT")}>USDT</Text>
-        <Text onClick={() => setAssetFix(assett, "BUSD")}>BUSD</Text>
+        <Button onClick={() => setAssetFix(assett, "USDT")}>USDT</Button>
+        <Button onClick={() => setAssetFix(assett, "BUSD")}>BUSD</Button>
       </Wrapper>
       <Wrapper>
         {averageDatasets.map(({ average, label }) => {
