@@ -133,7 +133,7 @@ const RenderAverage = (props: HJJ) => {
           return (
             <View
               style={{
-                padding: 10,
+                padding: 10,// @ts-ignore
                 background: datasets[index].backgroundColor,
               }}
               key={label}
