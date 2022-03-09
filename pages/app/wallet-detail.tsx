@@ -19,11 +19,13 @@ import { COLORS } from "../../constans";
 const WalletDetail = () => {
   const router = useRouter();
   const asset = router.query.from as string;
+
   const [assett, setAssett] = useState("");
-  const [allOrders, setAllOrders] = useState([] as RetAllOrders);
   const [display, setDisplay] = useState(false);
   const [averageShown, setAverageShown] = useState(false);
-  const h = generateChartData(allOrders, asset);
+  const [allOrders, setAllOrders] = useState([] as RetAllOrders);
+  
+  const chartData = generateChartData(allOrders, asset);
 
   const setAssetFix = (from: string) => {
     router.push({
@@ -60,7 +62,7 @@ const WalletDetail = () => {
         <Wrapper flex>
           <Input
             defaultValue={assett}
-            onChangeText={setAssett}
+            onChangeText={(text) => setAssett(text.toUpperCase())}
             style={{ flex: 1, display: "flex" }}
             onKeyUp={({ key }) => {
               if (key === "Enter") setAssetFix(assett);
@@ -69,17 +71,17 @@ const WalletDetail = () => {
           <Button onClick={() => setAssetFix(assett)}>Search</Button>
         </Wrapper>
       </Wrapper>
-      {averageShown && <RenderAverage {...h} />}
-      <RenderChart {...h} display={display} />
+      {averageShown && <RenderAverage {...chartData} />}
+      <RenderChart {...chartData} display={display} />
     </Container>
   );
 };
 
 export default WalletDetail;
 
-type HJJ = ReturnType<typeof generateChartData>;
+type ChartData = ReturnType<typeof generateChartData>;
 
-const RenderChart = (props: HJJ & { display: boolean }) => {
+const RenderChart = (props: ChartData & { display: boolean }) => {
   const { datasets, labels, display } = props;
   return (
     <View flex>
@@ -106,7 +108,7 @@ const RenderChart = (props: HJJ & { display: boolean }) => {
   );
 };
 
-const RenderAverage = (props: HJJ) => {
+const RenderAverage = (props: ChartData) => {
   const { averageDatasets, datasets } = props;
   return (
     <View
@@ -133,7 +135,7 @@ const RenderAverage = (props: HJJ) => {
           return (
             <View
               style={{
-                padding: 10,// @ts-ignore
+                padding: 10, // @ts-ignore
                 background: datasets[index].backgroundColor,
               }}
               key={label}

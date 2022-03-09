@@ -60,24 +60,26 @@ export const generateChartData = (allOrders: RetAllOrders, coin: string) => {
 
   const datasets = Object.values(dataset);
 
-  const averageDatasets = datasets.map(({ data, label }) => {
-    return {
-      label,
-      average: data //@ts-ignore
-        .filter(({ y }: ScatterDataPoint) => y !== null)
-        .reduce<ScatterDataPoint>(
-          (ret, curr, i, arr) => {
-            const isLast = i === arr.length - 1;
-            const { x, y } = curr as ScatterDataPoint;
-            return {
-              x: ret.x + x,
-              y: (ret.y + y) / (isLast ? arr.length : 1),
-            };
-          },
-          { x: 0, y: 0 }
-        ),
-    };
-  });
+  const averageDatasets = datasets.map(
+    ({ data, label }): { label?: string; average: ScatterDataPoint } => {
+      return {
+        label,
+        average: data //@ts-ignore
+          .filter(({ y }: ScatterDataPoint) => y !== null)
+          .reduce<ScatterDataPoint>(
+            (ret, curr, i, arr) => {
+              const isLast = i === arr.length - 1;
+              const { x, y } = curr as ScatterDataPoint;
+              return {
+                x: ret.x + x,
+                y: (ret.y + y) / (isLast ? arr.length : 1),
+              };
+            },
+            { x: 0, y: 0 }
+          ),
+      };
+    }
+  );
 
   return {
     datasets,
