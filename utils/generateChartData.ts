@@ -4,7 +4,11 @@ import moment from "moment";
 import { COLORS } from "../constans";
 import { RetAllOrders } from "../services/api";
 
-export const generateChartData = (allOrders: RetAllOrders, coin: string) => {
+export const generateChartData = (
+  allOrders: RetAllOrders,
+  coin: string,
+  hideCanceled?: boolean
+) => {
   let index = 0;
   const deftSideAndStatus = {
     symbol: [] as string[],
@@ -58,7 +62,13 @@ export const generateChartData = (allOrders: RetAllOrders, coin: string) => {
     return chartDataset;
   }, deftChartData);
 
-  const datasets = Object.values(dataset);
+  const datasets = Object.values(dataset).filter(({ label, data }) => {
+    // @ts-ignore
+    const filteredData = data.filter(({ x, y }: ScatterDataPoint) => x && y);
+    const canceled = hideCanceled && label?.includes("CANCELED");
+    if (canceled) return false;
+    return filteredData.length > 0;
+  });
 
   const averageDatasets = datasets.map(
     ({ data, label }): { label?: string; average: ScatterDataPoint } => {

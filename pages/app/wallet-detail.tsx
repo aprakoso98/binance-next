@@ -23,9 +23,10 @@ const WalletDetail = () => {
   const [assett, setAssett] = useState("");
   const [display, setDisplay] = useState(false);
   const [averageShown, setAverageShown] = useState(false);
+  const [hideCanceled, setHideCanseled] = useState(true);
   const [allOrders, setAllOrders] = useState([] as RetAllOrders);
-  
-  const chartData = generateChartData(allOrders, asset);
+
+  const chartData = generateChartData(allOrders, asset, hideCanceled);
 
   const setAssetFix = (from: string) => {
     router.push({
@@ -56,6 +57,9 @@ const WalletDetail = () => {
       <Wrapper>
         <Button onClick={() => router.push("/app")}>Home</Button>
         <Button onClick={() => setDisplay(!display)}>Show Legend</Button>
+        <Button onClick={() => setHideCanseled(!hideCanceled)}>{`${
+          hideCanceled ? "Show" : "Hide"
+        } Canceled`}</Button>
         <Button onClick={() => setAverageShown(!averageShown)}>
           Show Average
         </Button>
