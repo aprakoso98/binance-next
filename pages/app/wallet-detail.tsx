@@ -39,7 +39,12 @@ const WalletDetail = () => {
     const getDetail = async () => {
       const resp = await binance.allOrders(asset, "USDT");
       const resp2 = await binance.allOrders(asset, "BUSD");
-      setAllOrders([...resp, ...resp2]);
+      const data = [...resp, ...resp2].sort((a, b) => {
+        if (a.time < b.time) return -1;
+        if (a.time > b.time) return 1;
+        return 0;
+      });
+      setAllOrders(data);
     };
     if (asset?.length > 0) {
       getDetail();
