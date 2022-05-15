@@ -110,7 +110,7 @@ export const useArray = <T>(initialState: T[] = []): UseArrayRet<T> => {
   const replace: Manager["replace"] = (index, data) => {
     const dataL = state.slice(0, index);
     const dataR = state.slice(index + 1);
-    if (index > 0 && index < state?.length) {
+    if (index >= 0 && index < state?.length) {
       setState([...dataL, data, ...dataR]);
     }
   };
