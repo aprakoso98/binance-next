@@ -1,13 +1,18 @@
-import { clientRequest } from "./binance";
+import { C2CTradeHistoryOption, C2CTradeType } from "@binance/connector";
+import { clientRequest, clientRequestConnector } from "./binance";
 
 export type RetAccountInfo = Awaited<ReturnType<typeof binance.accountInfo>>;
 export type RetAllOrders = Awaited<ReturnType<typeof binance.allOrders>>;
 
 export const binance = {
+  async p2pHistory(options: C2CTradeHistoryOption & { type: C2CTradeType }) {
+    const { type, ...rest } = options;
+    return clientRequestConnector("c2cTradeHistory", [type, rest]);
+  },
   async allOrders(from: string, to: string) {
-  	const symbol = `${from}${to}`;
-  	const resp = await clientRequest(`allOrders`, [{symbol}]);
-  	return resp.data;
+    const symbol = `${from}${to}`;
+    const resp = await clientRequest(`allOrders`, [{ symbol }]);
+    return resp.data;
   },
   async accountInfo() {
     const {
