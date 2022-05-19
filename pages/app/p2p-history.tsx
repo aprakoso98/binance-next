@@ -21,6 +21,7 @@ type Data = {
     priceTotal: number;
     priceUnit: number;
     jumlah: number;
+    isCancelled?: boolean;
   })[];
   total: Record<string, [totalPrice?: number]>;
 };
@@ -29,17 +30,22 @@ const P2pHistory = () => {
   const defaultData: Data = { data: [], total: {} };
   const [dataHistory, setDataHistory] = useState<C2CTradeHistory["data"]>([]);
   const [state, setState] = useStateObject({
+    hideCancelled: true,
     type: "BUY" as C2CTradeType,
     startDate: moment().startOf("month").format(format),
     endDate: moment().endOf("month").format(format),
   });
 
+  const { endDate, startDate, type, hideCancelled } = state;
+
   const { data, total } = dataHistory.reduce<Data>((ret, history) => {
-    const { unitPrice, totalPrice, asset, amount, createTime } = history;
+    const { unitPrice, totalPrice, asset, amount, createTime, orderStatus } =
+      history;
     const priceTotal = Number(totalPrice);
     const priceUnit = Number(unitPrice);
     const jumlah = Number(amount);
     const time = moment(createTime).format(`DD MMM YYYY - HH:mm:ss`);
+    const isCancelled = orderStatus === "CANCELLED";
 
     if (!ret.total[asset]) ret.total[asset] = [];
 
@@ -47,14 +53,22 @@ const P2pHistory = () => {
       [asset]: [total = 0],
     } = ret.total;
 
+    if (hideCancelled && isCancelled) return ret;
+
     ret.total[asset] = [total + Number(totalPrice)];
 
-    ret.data.push({ ...history, time, priceTotal, priceUnit, jumlah });
+    ret.data.push({
+      ...history,
+      time,
+      jumlah,
+      priceUnit,
+      priceTotal,
+      isCancelled,
+    });
 
     return ret;
   }, defaultData);
 
-  const { endDate, startDate, type } = state;
   const isBuy = type === "BUY";
   const totalPrices = Object.entries(total);
   const allDeposited = totalPrices.reduce((ret, e) => {
@@ -81,6 +95,15 @@ const P2pHistory = () => {
             onClick={() => setState({ type: "SELL" })}
           >
             SELL
+          </Button>
+          <View style={{ padding: 5 }} />
+          <Button
+            style={{
+              background: hideCancelled ? COLORS.primary : COLORS.secondary,
+            }}
+            onClick={() => setState({ hideCancelled: !hideCancelled })}
+          >
+            {hideCancelled ? "Show Cancelled" : "Hide Cancelled"}
           </Button>
         </Wrapper>
         <Input
@@ -116,17 +139,20 @@ const P2pHistory = () => {
       <Wrapper>
         <Text style={{ flex: 1, textAlign: "center" }}>Time</Text>
         <Text style={{ flex: 1, textAlign: "center" }}>Asset</Text>
+        <Text style={{ flex: 1, textAlign: "center" }}>Status</Text>
         <Text style={{ flex: 1, textAlign: "center" }}>Amount</Text>
         <Text style={{ flex: 1, textAlign: "center" }}>Price Unit (IDR)</Text>
         <Text style={{ flex: 1, textAlign: "center" }}>Price Total (IDR)</Text>
       </Wrapper>
 
       {data.map((history) => {
-        const { asset, time, priceUnit, priceTotal, jumlah } = history;
+        const { asset, time, priceUnit, priceTotal, jumlah, orderStatus } =
+          history;
         return (
           <Wrapper key={`${asset}-${time}`}>
             <Text style={{ flex: 1 }}>{time}</Text>
             <Text style={{ flex: 1 }}>{asset}</Text>
+            <Text style={{ flex: 1 }}>{orderStatus}</Text>
             <Text style={{ flex: 1, textAlign: "right" }}>
               {numberFormat(jumlah)}
             </Text>
